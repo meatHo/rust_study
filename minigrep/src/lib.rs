@@ -2,23 +2,40 @@ use std::io::{self, Write};
 use std::fs::{File,self};
 
 pub struct Config{
-    path:String
+    path:String,
+    message:String,
+
 }
 
 impl Config{
     pub fn init(args:&Vec<String>)->Config{
-        Config { path: args[1].clone() }
+        Config { path: args[1].clone(),message:args[2].clone() }
     }
     pub fn read_file(&self){
-        let file = checkfile(&self.path);
+        let file = checkfile(&self.path,&self.message);
         println!("{}",file);
     }
 }
 
-pub fn checkfile(path:&String)->String{
+pub fn checkfile(path:&String,message:&String)->String{
     let contents_res = fs::read_to_string(path);
     match contents_res{
-        Ok(content)=>content,
+        Ok(content)=>{
+            println!("file exist finding message");
+            let mut ret=String::new();
+            for line in content.lines(){
+                if line.contains(message){
+                    ret.push_str(line);
+                    ret.push_str("\n");
+                }
+            }
+            if ret.is_empty(){
+                String::from("can't find")
+            }else{
+                ret
+            }
+            
+        },
         Err(e)=>match e.kind(){
             io::ErrorKind::NotFound=>{
                 file_create(&path);
