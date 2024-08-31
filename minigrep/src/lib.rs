@@ -16,6 +16,28 @@ impl Config{
         println!("{}",file);
     }
 }
+//반복자 이용
+/* impl Config{
+    pub fn init(mut args:impl Iterator<Item=String>)->Result<Config,String>{
+        args.next();
+
+        //Config { path: args.next().unwrap(),message:args.next().unwrap() }
+        let tpath = match args.next(){
+            Some(args)=>args,
+            None=>return Err("err parsing args".to_string())
+        };
+        let tmessage=match args.next(){
+            Some(args)=>args,
+            None=>return Err("err parsing args".to_string())
+        };
+
+        Ok(Config { path: tpath, message: tmessage })
+    }
+    pub fn read_file(&self){
+        let file = checkfile(&self.path,&self.message);
+        println!("{}",file);
+    }
+} */
 
 pub fn checkfile(path:&String,message:&String)->String{
     let contents_res = fs::read_to_string(path);
